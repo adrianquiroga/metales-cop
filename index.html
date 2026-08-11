@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo de Metales Preciosos | Oro y Plata en COP</title>
+    <!-- Google Fonts & Chart.js -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0F172A;
+            --card-bg: #1E293B;
+            --border-color: #334155;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --amber-gold: #F59E0B;
+            --silver-slate: #94A3B8;
+            --trm-blue: #38BDF8;
+            --accent-green: #10B981;
+            --accent-red: #EF4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F59E0B, #FCD34D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .badge-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: #475569;
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .kpi-sub {
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .positive { color: var(--accent-green); }
+        .negative { color: var(--accent-red); }
+
+        /* Controls Section */
+        .controls-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .control-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-right: 8px;
+        }
+
+        /* Filter Pills & Buttons */
+        .pill-btn {
+            background: #0F172A;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pill-btn:hover {
+            border-color: #64748B;
+            color: var(--text-main);
+        }
+
+        .pill-btn.active {
+            background: #3B82F6;
+            border-color: #3B82F6;
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .metal-btn.active-gold {
+            background: var(--amber-gold);
+            border-color: var(--amber-gold);
+            color: #0F172A;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .metal-btn.active-silver {
+            background: #94A3B8;
+            border-color: #94A3B8;
+            color: #0F172A;
+            box-shadow: 0 4px 12px rgba(148, 163, 184, 0.3);
+        }
+
+        .metal-btn.active-trm {
+            background: var(--trm-blue);
+            border-color: var(--trm-blue);
+            color: #0F172A;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Chart Canvas Container */
+        .chart-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            height: 480px;
+            width: 100%;
+        }
+
+        /* Tooltip style override */
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 16px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>ESTADÍSTICA DIARIA DE METALES PRECIOSOS</h1>
+            <div class="subtitle">Precio del Oro y Plata por gramo en Pesos Colombianos (COP)</div>
+        </div>
+        <div class="badge-live">
+            <div class="pulse-dot"></div>
+            <span id="lastUpdatedDate">Actualizado a Hoy</span>
+        </div>
+    </div>
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">Oro (COP / Gramo)</div>
+            <div class="kpi-value" id="kpiGold">$ 0</div>
+            <div class="kpi-sub" id="kpiGoldVar">0.00% hoy</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Plata (COP / Gramo)</div>
+            <div class="kpi-value" id="kpiSilver">$ 0</div>
+            <div class="kpi-sub" id="kpiSilverVar">0.00% hoy</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">TRM (USD / COP)</div>
+            <div class="kpi-value" id="kpiTrm">$ 0</div>
+            <div class="kpi-sub" id="kpiTrmSub">Tasa de Cambio</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Oro (USD / Onza Troy)</div>
+            <div class="kpi-value" id="kpiGoldUsd">$ 0</div>
+            <div class="kpi-sub" id="kpiGoldUsdSub">Mercado Internacional</div>
+        </div>
+    </div>
+
+    <!-- Controls Panel -->
+    <div class="controls-container">
+        <!-- Metal Selector -->
+        <div class="control-group">
+            <span class="control-title">Ver Activo:</span>
+            <button class="pill-btn metal-btn active-gold" onclick="setMetal('gold')">🟡 Oro (COP/g)</button>
+            <button class="pill-btn metal-btn" onclick="setMetal('silver')">⚪ Plata (COP/g)</button>
+            <button class="pill-btn metal-btn" onclick="setMetal('trm')">💵 TRM (USD/COP)</button>
+            <button class="pill-btn metal-btn" onclick="setMetal('both')">📊 Comparativo (Ambos)</button>
+        </div>
+
+        <!-- Period Selector -->
+        <div class="control-group">
+            <span class="control-title">Período:</span>
+            <button class="pill-btn period-btn active" onclick="setPeriod('30d')">Últimos 30 Días</button>
+            <button class="pill-btn period-btn" onclick="setPeriod('90d')">Últimos 90 Días</button>
+            <button class="pill-btn period-btn" onclick="setPeriod('2025')">Año 2025</button>
+            <button class="pill-btn period-btn" onclick="setPeriod('2026')">Año 2026</button>
+            <button class="pill-btn period-btn" onclick="setPeriod('all')">Todo (Desde 2025)</button>
+        </div>
+    </div>
+
+    <!-- Chart Wrapper -->
+    <div class="chart-wrapper">
+        <canvas id="metalsChart"></canvas>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Sistema de Presupuesto y Control Financiero &bull; Datos extraídos automáticamente de Yahoo Finance API
+    </div>
+
+    <!-- Load Data JS -->
+    <script src="data.js"></script>
+    
+    <script>
+        let rawData = window.METALES_DATA || [];
+        let chartInstance = null;
+
+        let currentMetal = 'gold'; // 'gold', 'silver', 'trm', 'both'
+        let currentPeriod = '30d'; // '30d', '90d', '2025', '2026', 'all'
+
+        // Helper Formatting
+        function formatCOP(num) {
+            return '$ ' + Math.round(num).toLocaleString('es-CO');
+        }
+
+        function formatCOP2(num) {
+            return '$ ' + num.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatDateEs(dateStr) {
+            const parts = dateStr.split('-');
+            const date = new Date(parts[0], parts[1] - 1, parts[2]);
+            return date.toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // Initialize Page & KPIs
+        function initDashboard() {
+            if (!rawData || rawData.length === 0) return;
+
+            const latest = rawData[rawData.length - 1];
+            const prev = rawData.length > 1 ? rawData[rawData.length - 2] : latest;
+
+            document.getElementById('lastUpdatedDate').innerText = 'Última fecha: ' + latest.fecha;
+
+            // KPIs
+            document.getElementById('kpiGold').innerText = formatCOP2(latest.oro_cop_g);
+            document.getElementById('kpiSilver').innerText = formatCOP2(latest.plata_cop_g);
+            document.getElementById('kpiTrm').innerText = formatCOP2(latest.trm);
+            document.getElementById('kpiGoldUsd').innerText = '$ ' + latest.oro_usd.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' / oz';
+
+            // Variations
+            const varGold = ((latest.oro_cop_g - prev.oro_cop_g) / prev.oro_cop_g) * 100;
+            const varSilver = ((latest.plata_cop_g - prev.plata_cop_g) / prev.plata_cop_g) * 100;
+
+            const elGoldVar = document.getElementById('kpiGoldVar');
+            elGoldVar.innerText = (varGold >= 0 ? '+' : '') + varGold.toFixed(2) + '% hoy';
+            elGoldVar.className = 'kpi-sub ' + (varGold >= 0 ? 'positive' : 'negative');
+
+            const elSilverVar = document.getElementById('kpiSilverVar');
+            elSilverVar.innerText = (varSilver >= 0 ? '+' : '') + varSilver.toFixed(2) + '% hoy';
+            elSilverVar.className = 'kpi-sub ' + (varSilver >= 0 ? 'positive' : 'negative');
+
+            renderChart();
+        }
+
+        // Filter Data by Selected Period
+        function getFilteredData() {
+            if (!rawData || rawData.length === 0) return [];
+
+            const total = rawData.length;
+            if (currentPeriod === '30d') {
+                return rawData.slice(Math.max(0, total - 30));
+            } else if (currentPeriod === '90d') {
+                return rawData.slice(Math.max(0, total - 90));
+            } else if (currentPeriod === '2025') {
+                return rawData.filter(d => d.fecha.startsWith('2025'));
+            } else if (currentPeriod === '2026') {
+                return rawData.filter(d => d.fecha.startsWith('2026'));
+            } else {
+                return rawData;
+            }
+        }
+
+        // Set Metal Active State
+        function setMetal(metal) {
+            currentMetal = metal;
+            document.querySelectorAll('.metal-btn').forEach(btn => {
+                btn.className = 'pill-btn metal-btn';
+            });
+
+            const targetBtn = event.target;
+            if (metal === 'gold') targetBtn.classList.add('active-gold');
+            else if (metal === 'silver') targetBtn.classList.add('active-silver');
+            else if (metal === 'trm') targetBtn.classList.add('active-trm');
+            else targetBtn.classList.add('active');
+
+            renderChart();
+        }
+
+        // Set Period Active State
+        function setPeriod(period) {
+            currentPeriod = period;
+            document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderChart();
+        }
+
+        // Render Chart using Chart.js
+        function renderChart() {
+            const filtered = getFilteredData();
+            const labels = filtered.map(d => d.fecha);
+
+            const ctx = document.getElementById('metalsChart').getContext('2d');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            let datasets = [];
+
+            if (currentMetal === 'gold') {
+                datasets.push({
+                    label: 'Oro (COP / Gramo)',
+                    data: filtered.map(d => d.oro_cop_g),
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.2,
+                    pointRadius: filtered.length > 90 ? 0 : 4,
+                    pointHoverRadius: 7,
+                    pointHoverBackgroundColor: '#F59E0B',
+                    pointHoverBorderColor: '#FFFFFF',
+                    pointHoverBorderWidth: 2
+                });
+            } else if (currentMetal === 'silver') {
+                datasets.push({
+                    label: 'Plata (COP / Gramo)',
+                    data: filtered.map(d => d.plata_cop_g),
+                    borderColor: '#94A3B8',
+                    backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.2,
+                    pointRadius: filtered.length > 90 ? 0 : 4,
+                    pointHoverRadius: 7,
+                    pointHoverBackgroundColor: '#94A3B8',
+                    pointHoverBorderColor: '#FFFFFF',
+                    pointHoverBorderWidth: 2
+                });
+            } else if (currentMetal === 'trm') {
+                datasets.push({
+                    label: 'TRM (USD / COP)',
+                    data: filtered.map(d => d.trm),
+                    borderColor: '#38BDF8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.2,
+                    pointRadius: filtered.length > 90 ? 0 : 4,
+                    pointHoverRadius: 7,
+                    pointHoverBackgroundColor: '#38BDF8',
+                    pointHoverBorderColor: '#FFFFFF',
+                    pointHoverBorderWidth: 2
+                });
+            } else if (currentMetal === 'both') {
+                datasets.push({
+                    label: 'Oro (COP / Gramo)',
+                    data: filtered.map(d => d.oro_cop_g),
+                    borderColor: '#F59E0B',
+                    borderWidth: 3,
+                    yAxisID: 'yGold',
+                    tension: 0.2,
+                    pointRadius: filtered.length > 90 ? 0 : 3
+                });
+                datasets.push({
+                    label: 'Plata (COP / Gramo)',
+                    data: filtered.map(d => d.plata_cop_g),
+                    borderColor: '#38BDF8',
+                    borderWidth: 3,
+                    yAxisID: 'ySilver',
+                    tension: 0.2,
+                    pointRadius: filtered.length > 90 ? 0 : 3
+                });
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: { color: '#94A3B8', font: { family: 'Plus Jakarta Sans', size: 12, weight: 600 } }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0F172A',
+                            titleColor: '#F8FAFC',
+                            bodyColor: '#F8FAFC',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            padding: 14,
+                            displayColors: true,
+                            cornerRadius: 12,
+                            callbacks: {
+                                title: function(context) {
+                                    const index = context[0].dataIndex;
+                                    const item = filtered[index];
+                                    return formatDateEs(item.fecha);
+                                },
+                                label: function(context) {
+                                    const val = context.parsed.y;
+                                    return '  ' + context.dataset.label + ': ' + formatCOP2(val);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(51, 65, 85, 0.4)' },
+                            ticks: { color: '#94A3B8', maxRotation: 0, font: { family: 'Plus Jakarta Sans', size: 11 } }
+                        },
+                        y: currentMetal !== 'both' ? {
+                            grid: { color: 'rgba(51, 65, 85, 0.4)' },
+                            ticks: { 
+                                color: '#94A3B8', 
+                                font: { family: 'Plus Jakarta Sans', size: 11 },
+                                callback: function(val) { return '$ ' + Math.round(val).toLocaleString('es-CO'); }
+                            }
+                        } : {
+                            yGold: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: { display: true, text: 'Oro COP/g', color: '#F59E0B' },
+                                grid: { color: 'rgba(51, 65, 85, 0.4)' },
+                                ticks: { color: '#F59E0B', callback: val => '$ ' + Math.round(val).toLocaleString('es-CO') }
+                            },
+                            ySilver: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: { display: true, text: 'Plata COP/g', color: '#38BDF8' },
+                                grid: { drawOnChartArea: false },
+                                ticks: { color: '#38BDF8', callback: val => '$ ' + Math.round(val).toLocaleString('es-CO') }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>
