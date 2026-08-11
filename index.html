@@ -64,13 +64,20 @@
             color: var(--text-muted);
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
         .badge-live {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             background: rgba(16, 185, 129, 0.1);
             color: var(--accent-green);
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 9999px;
             font-size: 0.8rem;
             font-weight: 600;
@@ -89,6 +96,29 @@
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Botón Destacado del Administrador (Modo 1 Clic) */
+        .btn-spot-admin {
+            display: none; /* Se activa dinámicamente */
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #0F172A;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+            transition: all 0.2s;
+            border: 1px solid #FBBF24;
+        }
+
+        .btn-spot-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.6);
+            background: linear-gradient(135deg, #FBBF24, #F59E0B);
         }
 
         /* KPI Cards Grid */
@@ -212,6 +242,18 @@
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
         }
 
+        .admin-toggle-btn {
+            border: 1px dashed #64748B;
+            background: rgba(30, 41, 59, 0.8);
+            color: #94A3B8;
+        }
+
+        .admin-toggle-btn.admin-on {
+            border: 1px solid #F59E0B;
+            background: rgba(245, 158, 11, 0.15);
+            color: #FCD34D;
+        }
+
         /* Chart Canvas Container */
         .chart-wrapper {
             background: var(--card-bg);
@@ -223,7 +265,6 @@
             width: 100%;
         }
 
-        /* Tooltip style override */
         canvas {
             width: 100% !important;
             height: 100% !important;
@@ -233,7 +274,11 @@
         .footer {
             margin-top: auto;
             padding-top: 16px;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
             font-size: 0.8rem;
             color: var(--text-muted);
             border-top: 1px solid var(--border-color);
@@ -248,9 +293,16 @@
             <h1>ESTADÍSTICA DIARIA DE METALES PRECIOSOS</h1>
             <div class="subtitle">Precio del Oro y Plata por gramo en Pesos Colombianos (COP)</div>
         </div>
-        <div class="badge-live">
-            <div class="pulse-dot"></div>
-            <span id="lastUpdatedDate">Actualizado a Hoy</span>
+        <div class="header-actions">
+            <!-- Botón Destacado Únicamente para el Administrador -->
+            <a id="btnAdminSpot" href="https://github.com/adrianquiroga/metales-cop/actions/workflows/actualizar.yml" target="_blank" class="btn-spot-admin">
+                ⚡ Solicitar Precio Spot en Vivo (1 Clic)
+            </a>
+
+            <div class="badge-live">
+                <div class="pulse-dot"></div>
+                <span id="lastUpdatedDate">Actualizado a Hoy</span>
+            </div>
         </div>
     </div>
 
@@ -289,7 +341,7 @@
             <button class="pill-btn metal-btn" onclick="setMetal('both')">📊 Comparativo (Ambos)</button>
         </div>
 
-        <!-- Period Selector -->
+        <!-- Period Selector & Admin Toggle -->
         <div class="control-group">
             <span class="control-title">Período:</span>
             <button class="pill-btn period-btn active" onclick="setPeriod('30d')">Últimos 30 Días</button>
@@ -297,6 +349,11 @@
             <button class="pill-btn period-btn" onclick="setPeriod('2025')">Año 2025</button>
             <button class="pill-btn period-btn" onclick="setPeriod('2026')">Año 2026</button>
             <button class="pill-btn period-btn" onclick="setPeriod('all')">Todo (Desde 2025)</button>
+
+            <!-- Botón Visibilidad Administrador -->
+            <button class="pill-btn admin-toggle-btn" id="adminToggleBtn" onclick="toggleAdminMode()">
+                ⚙️ Modo Administrador
+            </button>
         </div>
     </div>
 
@@ -307,7 +364,8 @@
 
     <!-- Footer -->
     <div class="footer">
-        Sistema de Presupuesto y Control Financiero &bull; Datos extraídos automáticamente de Yahoo Finance API
+        <span>Sistema de Presupuesto y Control Financiero &bull; Datos extraídos de Yahoo Finance API</span>
+        <span style="color: #64748B;">Versión 2.0 &bull; GitHub Actions Auto-Sync</span>
     </div>
 
     <!-- Load Data JS -->
@@ -317,14 +375,43 @@
         let rawData = window.METALES_DATA || [];
         let chartInstance = null;
 
-        let currentMetal = 'gold'; // 'gold', 'silver', 'trm', 'both'
-        let currentPeriod = '30d'; // '30d', '90d', '2025', '2026', 'all'
+        let currentMetal = 'gold';
+        let currentPeriod = '30d';
 
-        // Helper Formatting
-        function formatCOP(num) {
-            return '$ ' + Math.round(num).toLocaleString('es-CO');
+        // Check & Initialize Admin Mode
+        function checkAdminMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isAdminParam = urlParams.has('admin');
+            const isAdminSaved = localStorage.getItem('is_admin_mode') === 'true';
+            const btnSpot = document.getElementById('btnAdminSpot');
+            const btnToggle = document.getElementById('adminToggleBtn');
+
+            if (isAdminParam || isAdminSaved) {
+                btnSpot.style.display = 'inline-flex';
+                btnToggle.classList.add('admin-on');
+                btnToggle.innerText = '⚙️ Modo Admin (ACTIVO)';
+                localStorage.setItem('is_admin_mode', 'true');
+            } else {
+                btnSpot.style.display = 'none';
+                btnToggle.classList.remove('admin-on');
+                btnToggle.innerText = '⚙️ Activar Modo Admin';
+            }
         }
 
+        function toggleAdminMode() {
+            const current = localStorage.getItem('is_admin_mode') === 'true';
+            if (current) {
+                localStorage.removeItem('is_admin_mode');
+                checkAdminMode();
+                alert('Modo Administrador desactivado. El botón de disparo en vivo ahora está oculto.');
+            } else {
+                localStorage.setItem('is_admin_mode', 'true');
+                checkAdminMode();
+                alert('¡Modo Administrador ACTIVADO!\n\nSe ha habilitado el botón amarillo: ⚡ Solicitar Precio Spot en Vivo (1 Clic) en el encabezado.');
+            }
+        }
+
+        // Formatting Helpers
         function formatCOP2(num) {
             return '$ ' + num.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
@@ -337,6 +424,8 @@
 
         // Initialize Page & KPIs
         function initDashboard() {
+            checkAdminMode();
+
             if (!rawData || rawData.length === 0) return;
 
             const latest = rawData[rawData.length - 1];

@@ -10,13 +10,29 @@ Este módulo automatiza la consulta, cálculo y almacenamiento de la estadístic
 
 ---
 
+## ⚡ Botón Administrador: Actualización Spot en Vivo (1 Clic)
+
+Se implementó el botón destacado:
+
+👉 **`⚡ Solicitar Precio Spot en Vivo (1 Clic)`**
+
+### ¿Cómo funciona la privacidad del botón?
+1. **Para Visitantes Públicos:** Al abrir [https://adrianquiroga.github.io/metales-cop/](https://adrianquiroga.github.io/metales-cop/), la interfaz se muestra limpia sin el botón de administrador.
+2. **Para Ti (Administrador):** 
+   - Puedes abrir la web con el enlace privado: **`https://adrianquiroga.github.io/metales-cop/?admin=1`**
+   - O hacer clic en **`⚙️ Modo Administrador`** en la parte inferior de la página.
+   - El botón amarillo **`⚡ Solicitar Precio Spot en Vivo (1 Clic)`** aparecerá en el encabezado.
+   - Al tocarlo en tu celular, te abrirá GitHub con el botón `Run workflow` directo para disparar la actualización en vivo.
+
+---
+
 ## 📁 Archivos del Módulo
 
 ```
 c:\PROYECTOS\PRESUPUESTO\metales\
 ├── .github/workflows/
 │   └── actualizar.yml          # 🤖 Automatización en la nube (GitHub Actions a las 6:00 PM)
-├── index.html                  # 🌐 Interfaz Web Interactiva (Gráfica al 100% de ancho con Tooltips)
+├── index.html                  # 🌐 Interfaz Web Interactiva con Modo Administrador 1 Clic
 ├── data.js                     # 📊 Base de datos JavaScript exportada automáticamente
 ├── data.json                   # 📄 Base de datos JSON para APIs o consumo externo
 ├── actualizar_metales.py       # 🐍 Script principal de actualización en Python
@@ -24,26 +40,6 @@ c:\PROYECTOS\PRESUPUESTO\metales\
 ├── Precios_Metales_COP.xlsx    # 📈 Libro de Excel con Dashboard y datos diarios
 └── README.md                   # 📝 Documentación del módulo
 ```
-
----
-
-## 🤖 Automatización Autónoma en la Nube (GitHub Actions)
-
-El archivo [`.github/workflows/actualizar.yml`](file:///c:/PROYECTOS/PRESUPUESTO/metales/.github/workflows/actualizar.yml) configura un robot en los servidores de GitHub que se ejecuta automáticamente de **lunes a viernes a las 6:00 PM (hora Colombia)**.
-
-### Lo que hace el robot en la nube:
-1. Enciende un servidor virtual Ubuntu en GitHub.
-2. Instala Python y `openpyxl`.
-3. Ejecuta `python actualizar_metales.py` consultando Yahoo Finance.
-4. Actualiza `Precios_Metales_COP.xlsx`, `data.js` y `data.json`.
-5. Realiza `git commit` y `git push` automáticamente.
-6. GitHub Pages renueva la web pública [https://adrianquiroga.github.io/metales-cop/](https://adrianquiroga.github.io/metales-cop/) sin que tengas que tocar nada.
-
----
-
-## ⚡ Opción Manual en 1 Clic (Local)
-
-También puedes ejecutar manualmente en cualquier momento haciendo **doble clic en [`actualizar_metales.bat`](file:///c:/PROYECTOS/PRESUPUESTO/metales/actualizar_metales.bat)**.
 
 ---
 
