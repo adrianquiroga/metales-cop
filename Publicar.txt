@@ -1,0 +1,4 @@
+cd c:\PROYECTOS\PRESUPUESTO\metales
+git add .
+git commit -m "Actualización diaria de cotizaciones"
+git push
