@@ -3707,17 +3707,17 @@ window.METALES_DATA = [
     "fecha": "2026-08-13",
     "oro_usd": 4363.6,
     "plata_usd": 64.87,
-    "trm": 3146.16,
-    "oro_cop_g": 441384.22,
-    "plata_cop_g": 6561.99
+    "trm": 3123.84,
+    "oro_cop_g": 438252.9,
+    "plata_cop_g": 6515.44
   },
   {
     "fecha": "2026-08-14",
     "oro_usd": 4380.4,
     "plata_usd": 64.99,
-    "trm": 3146.16,
-    "oro_cop_g": 443083.54,
-    "plata_cop_g": 6573.63
+    "trm": 3123.84,
+    "oro_cop_g": 439940.17,
+    "plata_cop_g": 6526.99
   },
   {
     "fecha": "2026-08-16",
@@ -3737,10 +3737,18 @@ window.METALES_DATA = [
   },
   {
     "fecha": "2026-08-18",
-    "oro_usd": 4388.9,
-    "plata_usd": 63.32,
-    "trm": 3132.98,
-    "oro_cop_g": 442083.55,
-    "plata_cop_g": 6378.07
+    "oro_usd": 4366.0,
+    "plata_usd": 63.94,
+    "trm": 3106.02,
+    "oro_cop_g": 435992.53,
+    "plata_cop_g": 6385.2
+  },
+  {
+    "fecha": "2026-08-19",
+    "oro_usd": 4576.5,
+    "plata_usd": 67.06,
+    "trm": 3106.02,
+    "oro_cop_g": 457013.24,
+    "plata_cop_g": 6696.67
   }
 ];
