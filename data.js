@@ -3803,16 +3803,16 @@ window.METALES_DATA = [
     "fecha": "2026-08-27",
     "oro_usd": 4609.7,
     "plata_usd": 69.43,
-    "trm": 3127.86,
-    "oro_cop_g": 463565.45,
-    "plata_cop_g": 6981.99
+    "trm": 3162.04,
+    "oro_cop_g": 468631.1,
+    "plata_cop_g": 7058.29
   },
   {
     "fecha": "2026-08-28",
-    "oro_usd": 4635.0,
-    "plata_usd": 69.89,
-    "trm": 3150.47,
-    "oro_cop_g": 469478.97,
-    "plata_cop_g": 7078.65
+    "oro_usd": 4504.1,
+    "plata_usd": 67.09,
+    "trm": 3202.48,
+    "oro_cop_g": 463751.7,
+    "plata_cop_g": 6907.73
   }
 ];
