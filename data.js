@@ -3809,10 +3809,26 @@ window.METALES_DATA = [
   },
   {
     "fecha": "2026-08-28",
-    "oro_usd": 4504.1,
-    "plata_usd": 67.09,
-    "trm": 3202.48,
-    "oro_cop_g": 463751.7,
-    "plata_cop_g": 6907.73
+    "oro_usd": 4478.1,
+    "plata_usd": 67.0,
+    "trm": 3162.04,
+    "oro_cop_g": 455252.38,
+    "plata_cop_g": 6810.84
+  },
+  {
+    "fecha": "2026-08-31",
+    "oro_usd": 4478.1,
+    "plata_usd": 67.0,
+    "trm": 3219.18,
+    "oro_cop_g": 463479.05,
+    "plata_cop_g": 6933.92
+  },
+  {
+    "fecha": "2026-09-01",
+    "oro_usd": 4493.4,
+    "plata_usd": 67.29,
+    "trm": 3219.18,
+    "oro_cop_g": 465062.57,
+    "plata_cop_g": 6964.45
   }
 ];
