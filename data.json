@@ -3953,10 +3953,34 @@
   },
   {
     "fecha": "2026-09-18",
-    "oro_usd": 4415.9,
-    "plata_usd": 66.79,
-    "trm": 3174.78,
-    "oro_cop_g": 450737.74,
-    "plata_cop_g": 6816.85
+    "oro_usd": 4424.9,
+    "plata_usd": 66.56,
+    "trm": 3166.69,
+    "oro_cop_g": 450505.46,
+    "plata_cop_g": 6776.16
+  },
+  {
+    "fecha": "2026-09-20",
+    "oro_usd": 4424.9,
+    "plata_usd": 66.56,
+    "trm": 3176.05,
+    "oro_cop_g": 451837.06,
+    "plata_cop_g": 6796.19
+  },
+  {
+    "fecha": "2026-09-21",
+    "oro_usd": 4424.9,
+    "plata_usd": 66.56,
+    "trm": 3194.24,
+    "oro_cop_g": 454424.83,
+    "plata_cop_g": 6835.11
+  },
+  {
+    "fecha": "2026-09-22",
+    "oro_usd": 4397.3,
+    "plata_usd": 67.04,
+    "trm": 3194.24,
+    "oro_cop_g": 451590.38,
+    "plata_cop_g": 6884.31
   }
 ]
