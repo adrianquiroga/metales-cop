@@ -4001,10 +4001,34 @@ window.METALES_DATA = [
   },
   {
     "fecha": "2026-09-25",
-    "oro_usd": 4320.5,
-    "plata_usd": 64.71,
-    "trm": 3293.49,
-    "oro_cop_g": 457489.8,
-    "plata_cop_g": 6852.02
+    "oro_usd": 4321.2,
+    "plata_usd": 64.25,
+    "trm": 3356.68,
+    "oro_cop_g": 466342.91,
+    "plata_cop_g": 6933.31
+  },
+  {
+    "fecha": "2026-09-27",
+    "oro_usd": 4321.2,
+    "plata_usd": 64.25,
+    "trm": 3303.0,
+    "oro_cop_g": 458885.17,
+    "plata_cop_g": 6822.43
+  },
+  {
+    "fecha": "2026-09-28",
+    "oro_usd": 4321.2,
+    "plata_usd": 61.22,
+    "trm": 3303.0,
+    "oro_cop_g": 458885.17,
+    "plata_cop_g": 6501.19
+  },
+  {
+    "fecha": "2026-09-29",
+    "oro_usd": 4162.7,
+    "plata_usd": 61.08,
+    "trm": 3363.49,
+    "oro_cop_g": 450149.05,
+    "plata_cop_g": 6604.57
   }
 ];
