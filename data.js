@@ -4273,10 +4273,10 @@ window.METALES_DATA = [
   },
   {
     "fecha": "2026-11-06",
-    "oro_usd": 4069.8,
-    "plata_usd": 51.85,
-    "trm": 3230.99,
-    "oro_cop_g": 422765.7,
-    "plata_cop_g": 5386.11
+    "oro_usd": 4079.5,
+    "plata_usd": 51.97,
+    "trm": 3238.38,
+    "oro_cop_g": 424742.57,
+    "plata_cop_g": 5410.41
   }
 ];
